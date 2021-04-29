@@ -8,7 +8,7 @@ import './App.css';
 
 function App() {
   return (
-    <Saludo name={"Ignacio"} surname={"Neira"} />
+    <Saludo name={"Ignacio"} secondname={"Nicolás"} surname={"Neira"} />
   );
 }
 

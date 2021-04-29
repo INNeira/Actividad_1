@@ -11,7 +11,7 @@ export class Saludo extends React.Component{
     render(){
         return(
             <div>
-                Hola {this.props.name} {this.props.surname}
+                Hola {this.props.name} {this.props.secondname} {this.props.surname}
             </div>
         )
     }
