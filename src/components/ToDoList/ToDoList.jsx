@@ -79,22 +79,25 @@ export class ToDoList extends React.Component{
     render(){
         return(
             <>
-                
-                <label> Puesto </label>
-                <input value={this.state.inputValue} onChange={(a) => this.handleInput(a)} type="text" />
-                <label> Empresa </label>
-                <input value={this.state.inputValue2} onChange={(b) => this.handleInputB(b)} type="text" />
-                <label> Ciudad </label>
-                <input value={this.state.inputValue3} onChange={(c) => this.handleInputC(c)} type="text" />
-                <label> Pais </label>
-                <input value={this.state.inputValue4} onChange={(d) => this.handleInputD(d)} type="text" />
-                <button onClick={() => this.addTask(this.state.inputValue,this.state.inputValue2,this.state.inputValue3,this.state.inputValue4)}>Agregar</button>
-                <ul>
-                    {this.state.tasks.map(task =>(
-                        <List tasks={this.state.tasks} task={task} key={task.id} id={task.id } job={task.job} org={task.org} city={task.city} country={task.country} delete={this.deleteItem}/>
-                    ))}
-                </ul>
-                
+                <div className="form-todo">
+                    <label> Puesto </label>
+                    <input value={this.state.inputValue} onChange={(a) => this.handleInput(a)} type="text" />
+                    <label> Empresa </label>
+                    <input value={this.state.inputValue2} onChange={(b) => this.handleInputB(b)} type="text" />
+                    <label> Ciudad </label>
+                    <input value={this.state.inputValue3} onChange={(c) => this.handleInputC(c)} type="text" />
+                    <label> Pais </label>
+                    <input value={this.state.inputValue4} onChange={(d) => this.handleInputD(d)} type="text" />
+                    <button onClick={() => this.addTask(this.state.inputValue,this.state.inputValue2,this.state.inputValue3,this.state.inputValue4)}>Agregar <i className="fas fa-plus-square"></i>
+                    </button>
+                </div>
+                <div className="todo-container">
+                    <ul className="todo-list">
+                        {this.state.tasks.map(task =>(
+                            <List tasks={this.state.tasks} task={task} key={task.id} id={task.id} job={task.job} org={task.org} city={task.city} country={task.country} delete={this.deleteItem}/>
+                        ))}
+                    </ul>
+                </div>
           </>
         )
     }
