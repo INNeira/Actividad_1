@@ -9,60 +9,91 @@ export class ToDoList extends React.Component{
         this.state ={
             tasks: [],
             inputValue: "",
-            inputValue2: "",
-            inputValue3: "",
-            inputValue4: "",
+            org: "",
+            city: "",
+            country: "",
+            countries: [],
+            idCountry: "",
+            cities: [],
+            orgs: [],
         }
         this.deleteItem = this.deleteItem.bind(this)
     }
+
+    componentDidMount(){
+        if(localStorage.getItem("countries") != null){
+            this.setState({
+                countries: JSON.parse(localStorage.getItem("countries")),
+            })
+        }
+        if(localStorage.getItem("cities") != null){
+            this.setState({
+                cities: JSON.parse(localStorage.getItem("cities"))
+            })
+        }
+        if(localStorage.getItem("orgs") != null){
+            this.setState({
+                orgs: JSON.parse(localStorage.getItem("orgs"))
+            })
+        }
+    }
     
-    handleInput(a){
+    handleInput(eventA){
         this.setState({
-            inputValue: a.target.value,
+            inputValue: eventA.target.value,
         })
     }
 
-    handleInputB(b){
+    handleInputB(eventB){
         this.setState({
-            inputValue2: b.target.value,
+            org: eventB.target.value,
         })
     }
 
-    handleInputC(c){
+    handleInputC(eventC){
         this.setState({
-            inputValue3: c.target.value,
+            city: eventC.target.value,
         })
     }
 
-    handleInputD(d){
+    handleInputD(eventD){
         this.setState({
-            inputValue4: d.target.value,
+            country: eventD.target.value,
         })
     }
 
     addTask(){
 
-        const newItem = {
-            id: 1+Math.random(),
-            job: this.state.inputValue,
-            org: this.state.inputValue2,
-            city: this.state.inputValue3,
-            country: this.state.inputValue4 
+        function isObjEmpty(obj) {
+            for (var prop in obj) {
+              if (obj.hasOwnProperty(prop)) return false;
+            }
+          
+            return true;
         }
 
-        const tasks = [...this.state.tasks];
-
-        tasks.push(newItem);
-
-        if(this.state.inputValue.trim() === '' || this.state.inputValue2.trim() === '' || this.state.inputValue3.trim() === '' || this.state.inputValue4.trim() === ''){
+        if(this.state.inputValue.trim() === '' || isObjEmpty(this.state.org) || isObjEmpty(this.state.city) || isObjEmpty(this.state.country)){
             alert('Estas mandando los campos vacios')
         }else{
+
+            const newItem = {
+                id: 1+Math.random(),
+                job: this.state.inputValue,
+                country:  this.state.country.country,
+                city: this.state.city.city,
+                org: this.state.org.org, 
+            }
+    
+            const tasks = [...this.state.tasks];
+    
+            tasks.push(newItem);
+
             this.setState({
                 tasks,
                 inputValue: "",
-                inputValue2: "",
-                inputValue3: "",
-                inputValue4: ""
+                org: "",
+                city: "",
+                country: "",
             })
         } 
     }
@@ -75,28 +106,73 @@ export class ToDoList extends React.Component{
 
         this.setState({tasks: upadtedList});
     }
+    
+    handleSelect(e){
+		e.preventDefault();
+
+        this.setState({
+            [e.target.name]: JSON.parse(e.target.value),
+        });
+	};
+
 
     render(){
         return(
             <>
                 <div className="form-todo">
                     <label> Puesto </label>
-                    <input value={this.state.inputValue} onChange={(a) => this.handleInput(a)} type="text" />
-                    <label> Empresa </label>
-                    <input value={this.state.inputValue2} onChange={(b) => this.handleInputB(b)} type="text" />
-                    <label> Ciudad </label>
-                    <input value={this.state.inputValue3} onChange={(c) => this.handleInputC(c)} type="text" />
+                    <input value={this.state.inputValue} onChange={(eventA) => this.handleInput(eventA)} type="text" />
                     <label> Pais </label>
-                    <input value={this.state.inputValue4} onChange={(d) => this.handleInputD(d)} type="text" />
-                    <button onClick={() => this.addTask(this.state.inputValue,this.state.inputValue2,this.state.inputValue3,this.state.inputValue4)}>Agregar <i className="fas fa-plus-square"></i>
+                    <select className="form-select" id="inputGroupSelect01"
+                            onChange={(e) => this.handleSelect(e)}
+                            value={JSON.stringify(this.state.cities.parentCountry)}
+                            name="country"
+                    >
+                        <option value={JSON.stringify({})}>Select option</option>
+                        {
+                        this.state.countries.map((country) => (
+                            <option key={country.id} value={JSON.stringify(country)}>{country.country}</option>
+                        ))}
+                    </select>
+                    <label> Ciudad </label>
+                    <select className="form-select" id="inputGroupSelect02"
+                            onChange={(e) => this.handleSelect(e)}
+                            value={JSON.stringify(this.state.city)}
+                            name="city"
+                    >
+                        <option value={JSON.stringify({})}>Select option</option>
+                        {this.state.cities.map((city) => city.parentCountry.id === this.state.country.id ? <option key={city.id} value={JSON.stringify(city)}>{city.city}</option> : JSON.stringify({}))}
+                    </select>
+                    <label> Empresa </label>
+                    <select className="form-select" id="inputGroupSelect03"
+                            onChange={(e) => this.handleSelect(e)}
+                            value={JSON.stringify(this.state.org)}
+                            name="org"
+                    >
+                        <option value={JSON.stringify({})}>Select option</option>
+                        {this.state.orgs.map((org) => org.parentCity.parentCountry.id === this.state.country.id && org.parentCity.id === this.state.city.id ? <option key={org.id} value={JSON.stringify(org)}>{org.org}</option> : JSON.stringify({}))}
+                    </select>
+                    <button onClick={() => this.addTask(this.state.inputValue,this.state.org,this.state.city,this.state.country)}>Agregar <i className="fas fa-plus-square"></i>
                     </button>
                 </div>
                 <div className="todo-container">
-                    <ul className="todo-list">
-                        {this.state.tasks.map(task =>(
-                            <List tasks={this.state.tasks} task={task} key={task.id} id={task.id} job={task.job} org={task.org} city={task.city} country={task.country} delete={this.deleteItem}/>
-                        ))}
-                    </ul>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className="thead">Puesto</th>
+                                <th className="thead">Empresa</th>
+                                <th className="thead">Ciudad</th>
+                                <th className="thead">País</th>
+                                <th className="thead">Acciones</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody className="todo-list">
+                                {this.state.tasks.map(task =>(
+                                <List tasks={this.state.tasks} task={task} key={task.id} id={task.id} job={task.job} org={task.org} city={task.city} country={task.country} delete={this.deleteItem}/>
+                                ))}
+                        </tbody>
+                    </table>
                 </div>
           </>
         )
