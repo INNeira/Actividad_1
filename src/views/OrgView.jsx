@@ -2,6 +2,7 @@ import React from 'react'
 import { OrgForm } from '../components/ToDoList/OrgForm';
 import { getDataCities } from '../clients/citiesClient'
 import {deleteDataOrgs, getDataOrgs, postDataOrgs } from '../clients/orgsClient'
+import swal from 'sweetalert';
 
 export class OrgView extends React.Component{
 
@@ -39,7 +40,15 @@ export class OrgView extends React.Component{
     }
 
     deleteOrg = (id) =>{
-        deleteDataOrgs(id);
+
+        if(deleteDataOrgs(id)){
+            swal({
+                title: "Eliminado!",
+                text: "El registro se ha eliminado con exito, por favor recargue la pantalla!",
+                icon: "info",
+                button: "Entendido",
+              });
+        };
     }
 
 

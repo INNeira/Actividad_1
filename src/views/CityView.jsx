@@ -2,6 +2,7 @@ import React from 'react'
 import { CityForm } from '../components/ToDoList/CityForm';
 import { getDataCountries } from '../clients/countriesClient'
 import {deleteDataCities, getDataCities, postDataCities } from '../clients/citiesClient'
+import swal from 'sweetalert';
 
 export class CitiesView extends React.Component{
 
@@ -40,7 +41,14 @@ export class CitiesView extends React.Component{
 
     deleteCity = (id) =>{
 
-        deleteDataCities(id);
+        if(deleteDataCities(id)){
+            swal({
+                title: "Eliminado!",
+                text: "El registro se ha eliminado con exito, por favor recargue la pantalla!",
+                icon: "info",
+                button: "Entendido",
+              });
+        };
     }
 
 

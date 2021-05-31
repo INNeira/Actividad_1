@@ -1,4 +1,5 @@
 import React from 'react'
+import swal from 'sweetalert';
 
 export class CityForm extends React.Component{
     constructor(props){
@@ -17,8 +18,15 @@ export class CityForm extends React.Component{
     
     submitForm = (e) => {
 
-        if((this.state.city.name).trim() === "" || (this.state.city.countrieId).trim() === ""){
-            alert("Datos VACIOS!!")
+        e.preventDefault()
+
+        if((this.state.city.name).trim() === "" || (this.state.city.countrieId) === ""){
+            swal({
+                title: "Error",
+                text: "Datos vacios, por favor verifique de rellenar todos los campos.",
+                icon: "error",
+                button: "Entendido",
+              });
         }else{
             e.preventDefault();
 
@@ -30,6 +38,13 @@ export class CityForm extends React.Component{
                     countrieId: ""
                 }
             })
+
+            swal({
+                title: "Exito!",
+                text: "El registro se completo con exito, por favor recargue la pantalla!",
+                icon: "success",
+                button: "Entendido",
+              });
         }
     };
 

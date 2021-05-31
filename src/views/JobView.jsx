@@ -2,6 +2,7 @@ import React from 'react'
 import { JobForm } from '../components/ToDoList/JobForm';
 import { getDataOrgs } from '../clients/orgsClient'
 import {deleteDataJobs, getData, postData } from '../clients/jobClient'
+import swal from 'sweetalert';
 
 export class JobView extends React.Component{
 
@@ -39,7 +40,14 @@ export class JobView extends React.Component{
     }
 
     deleteJob = (id) => {
-        deleteDataJobs(id)
+        if(deleteDataJobs(id)){
+            swal({
+                title: "Eliminado!",
+                text: "El registro se ha eliminado con exito, por favor recargue la pantalla!",
+                icon: "info",
+                button: "Entendido",
+              });
+        }
     }
 
 
