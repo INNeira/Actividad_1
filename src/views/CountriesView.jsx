@@ -1,6 +1,7 @@
 import React from 'react'
 import { CountryFrom } from '../components/ToDoList/CountryForm';
 import {getDataCountries,postDataCountries, deleteDataCountries} from '../clients/countriesClient'
+import swal from 'sweetalert';
 
 export class CountriesView extends React.Component{
 
@@ -31,7 +32,15 @@ export class CountriesView extends React.Component{
 
     deleteCountry = (id) =>{
 
-        deleteDataCountries(id);
+        if(deleteDataCountries(id)){
+            swal({
+                title: "Eliminado!",
+                text: "El registro se ha eliminado con exito, por favor recargue la pantalla!",
+                icon: "info",
+                button: "Entendido",
+              });
+        };
+        
     }
 
 
@@ -51,12 +60,12 @@ export class CountriesView extends React.Component{
                                 {this.state.countriesFromApi.map(country =>
                                     <tr className="list" key={country.id}>
                                         <td>{country.name}</td>
-                                        <td><button onClick={() => this.deleteCountry(country.id)} className="trash-btn" >
-                                        <i className="fas fa-trash"></i>
-                                        </button>
+                                        <td>
+                                            <button onClick={() => this.deleteCountry(country.id)} className="trash-btn" >
+                                            <i className="fas fa-trash"></i>
+                                            </button>
                                         </td>
-                                    </tr>    
-                                )}
+                                    </tr>)}
                             </tbody>
                         </table>
                     </div>

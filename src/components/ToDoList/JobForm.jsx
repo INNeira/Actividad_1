@@ -1,4 +1,5 @@
 import React from 'react'
+import swal from 'sweetalert';
 
 export class JobForm extends React.Component{
     constructor(props){
@@ -17,8 +18,16 @@ export class JobForm extends React.Component{
 
     
     submitForm = (e) => {
-        if((this.state.job.position).trim() === "" && (this.state.job.description).trim() === "" && (this.state.job.organizationId).trim() === ""){
-            alert("Datos VACIOS!!")
+
+        e.preventDefault()
+
+        if((this.state.job.position).trim() === "" || (this.state.job.description).trim() === "" || (this.state.job.organizationId) === ""){
+            swal({
+                title: "Error",
+                text: "Datos vacios, por favor verifique de rellenar todos los campos.",
+                icon: "error",
+                button: "Entendido",
+              });
         }else{
             e.preventDefault();
 
@@ -31,6 +40,13 @@ export class JobForm extends React.Component{
                     organizationId: ""
                 }
             })
+
+            swal({
+                title: "Exito!",
+                text: "El registro se completo con exito, por favor recargue la pantalla!",
+                icon: "success",
+                button: "Entendido",
+            });
         }   
     };
 

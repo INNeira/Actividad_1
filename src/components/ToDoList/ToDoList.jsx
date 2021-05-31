@@ -4,6 +4,7 @@ import { getData } from '../../clients/jobClient'
 import { getDataCountries } from '../../clients/countriesClient'
 import { getDataCities } from '../../clients/citiesClient'
 import { getDataOrgs } from '../../clients/orgsClient'
+import swal from 'sweetalert';
 
 export class ToDoList extends React.Component{
     constructor(props){
@@ -99,7 +100,12 @@ export class ToDoList extends React.Component{
         }
 
         if(isObjEmpty(this.state.inputValue) || isObjEmpty(this.state.org) || isObjEmpty(this.state.city) || isObjEmpty(this.state.country)){
-            alert('Estas mandando los campos vacios')
+            swal({
+                title: "Error",
+                text: "Datos vacios, por favor verifique de rellenar todos los campos.",
+                icon: "error",
+                button: "Entendido",
+              });
         }else{
 
             const newItem = {
@@ -121,6 +127,13 @@ export class ToDoList extends React.Component{
                 city: "",
                 country: "",
             })
+
+            swal({
+                title: "Exito!",
+                text: "El registro se completo con exito!",
+                icon: "success",
+                button: "Entendido",
+            });
         } 
     }
 
@@ -131,6 +144,14 @@ export class ToDoList extends React.Component{
         const upadtedList = tasks.filter(item => item.id !== id)
 
         this.setState({tasks: upadtedList});
+
+        swal({
+            title: "Eliminado!",
+            text: "El registro se ha eliminado con exito!",
+            icon: "info",
+            button: "Entendido",
+          });
+
     }
     
     handleSelect(e){
@@ -139,6 +160,7 @@ export class ToDoList extends React.Component{
         this.setState({
             [e.target.name]: JSON.parse(e.target.value),
         });
+
 	};
 
 

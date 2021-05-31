@@ -1,4 +1,5 @@
 import React from 'react'
+import swal from 'sweetalert';
 
 export class OrgForm extends React.Component{
     constructor(props){
@@ -16,16 +17,35 @@ export class OrgForm extends React.Component{
     
 
     submitForm = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        this.props.addOrgs(this.state.org.name, this.state.org.placeId);
+        if((this.state.org.name).trim() === "" || (this.state.org.placeId) === ""){
+            swal({
+                title: "Error",
+                text: "Datos vacios, por favor verifique de rellenar todos los campos.",
+                icon: "error",
+                button: "Entendido",
+              });
+        }else{
+            e.preventDefault();
 
-        this.setState({
-            org: {
-                name: "",
-                placeId: ""
-            }
-        })
+            this.props.addOrgs(this.state.org.name, this.state.org.placeId);
+
+            this.setState({
+                org: {
+                    name: "",
+                    placeId: ""
+                }
+            })
+
+            swal({
+                title: "Exito!",
+                text: "El registro se completo con exito, por favor recargue la pantalla!",
+                icon: "success",
+                button: "Entendido",
+            });
+        }
+        
     };
 
     handleInput = (e) => {
