@@ -6,53 +6,40 @@ export class CityForm extends React.Component{
         this.props = props;
         this.state ={
             city: {
-                parentCountry: "",
                 name: "",
-                id: "",
+                countrieId: ""
             },
             cities: [],
             countries: []
         }
     }
 
-    componentDidMount(){
-        if(localStorage.getItem("cities") != null){
-            this.setState({
-                cities: JSON.parse(localStorage.getItem("cities")),
-            })
-        }
-        if(localStorage.getItem("countries") != null){
-            this.setState({
-                countries: JSON.parse(localStorage.getItem("countries")),
-            })
-        }
-    }
     
     submitForm = (e) => {
-        e.preventDefault();
 
-        const newCity = {
-            parentCountry: this.state.parentCountry,
-            city: this.state.city,
-            id: 1+Math.random(),
+        if((this.state.city.name).trim() === "" || (this.state.city.countrieId).trim() === ""){
+            alert("Datos VACIOS!!")
+        }else{
+            e.preventDefault();
+
+            this.props.addCity(this.state.city.name, this.state.city.countrieId);
+
+            this.setState({
+                city: {
+                    name: "",
+                    countrieId: ""
+                }
+            })
         }
-
-        this.props.addCity(newCity);
-
-        this.setState({
-            city: {
-                parentCountry: "",
-                name: "",
-                id: ""
-            }
-        })
     };
 
     handleInput = (e) => {
         e.preventDefault();
         this.setState({
-            ...this.state,
-            [e.target.name]: e.target.value,
+            [e.target.name]:{
+                name : e.target.value,
+                countrieId: ""
+            },
         });
     };
 
@@ -60,7 +47,11 @@ export class CityForm extends React.Component{
 		e.preventDefault();
 		this.setState({
             ...this.state,
-			[e.target.name]: JSON.parse(e.target.value),
+			[e.target.name]: {
+                name: this.state.city.name,
+                countrieId: JSON.parse(e.target.value)
+            }
+    
 		});
 	};
 
@@ -76,12 +67,12 @@ export class CityForm extends React.Component{
                     <label> Pais </label>
                         <select className="form-select" id="inputGroupSelect01"
                                 onChange={(e) => this.handleSelect(e)}
-                                value={JSON.stringify(this.state.parentCountry)}
-                                name="parentCountry"
+                                value={JSON.stringify(this.state.city.countrieId)}
+                                name="city"
                         >
                             <option value={JSON.stringify({})}>Select option</option>
-                            {this.state.countries.map((country) => (
-                                <option key={country.id} value={JSON.stringify(country)}>{country.country}</option>
+                            {this.props.countriesFromApi.map((country) => (
+                                <option key={country.id} value={JSON.stringify(country.id)}>{country.name}</option>
                             ))}
                         </select>
                     </div>

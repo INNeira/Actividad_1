@@ -6,44 +6,24 @@ export class OrgForm extends React.Component{
         this.props = props;
         this.state ={
             org: {
-                parentCity: "",
                 name: "",
-                id: "",
+                placeId: ""
             },
             orgs: [],
             cities: []
         }
     }
     
-    componentDidMount(){
-        if(localStorage.getItem("orgs") != null){
-            this.setState({
-                orgs: JSON.parse(localStorage.getItem("orgs")),
-            })
-        }
-        if(localStorage.getItem("cities") != null){
-            this.setState({
-                cities: JSON.parse(localStorage.getItem("cities")),
-            })
-        }
-    }
 
     submitForm = (e) => {
         e.preventDefault();
 
-        const newOrg = {
-            parentCity: this.state.parentCity,
-            org: this.state.org,
-            id: 1+Math.random(),
-        }
-
-        this.props.addOrgs(newOrg);
+        this.props.addOrgs(this.state.org.name, this.state.org.placeId);
 
         this.setState({
             org: {
-                parentCity: "",
                 name: "",
-                id: ""
+                placeId: ""
             }
         })
     };
@@ -51,14 +31,21 @@ export class OrgForm extends React.Component{
     handleInput = (e) => {
         e.preventDefault();
         this.setState({
-            [e.target.name]: e.target.value,
+            [e.target.name]:{
+                name : e.target.value,
+                placeId: ""
+            },
         });
     };
 
     handleSelect(e){
 		e.preventDefault();
 		this.setState({
-			[e.target.name]: JSON.parse(e.target.value),
+			...this.state,
+			[e.target.name]: {
+                name: this.state.org.name,
+                placeId: JSON.parse(e.target.value)
+            }
 		});
 	};
 
@@ -74,12 +61,12 @@ export class OrgForm extends React.Component{
                     <label> Ciudad </label>
                         <select className="form-select" id="inputGroupSelect02"
                                 onChange={(e) => this.handleSelect(e)}
-                                value={JSON.stringify(this.state.parentCity)}
-                                name="parentCity"
+                                value={JSON.stringify(this.state.org.placeId)}
+                                name="org"
                         >
                             <option value={JSON.stringify({})}>Select option</option>
-                            {this.state.cities.map((city) => (
-                                <option key={city.id} value={JSON.stringify(city)}>{city.city}</option>
+                            {this.props.citiesFromAPI.map((city) => (
+                                <option key={city.id} value={JSON.stringify(city.id)}>{city.name}</option>
                             ))}
                         </select>
                     </div>

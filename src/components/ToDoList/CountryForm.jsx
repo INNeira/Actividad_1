@@ -6,34 +6,34 @@ export class CountryFrom extends React.Component{
         this.props = props;
         this.state ={
             country: {
-                name: "",
-                id: "",
+                name: ""
             }
         }
     }
     
     submitForm = (e) => {
-        e.preventDefault();
 
-        const newCountry = {
-            country: this.state.country,
-            id: 1+Math.random(),
-        }
+        if((this.state.country.name).trim() === ""){
+            alert("Estas mandando los datos vacios!!")
+        }else{
+            e.preventDefault();
 
-        this.props.addCountry(newCountry);
+            this.props.addCountry(this.state.country.name);
 
-        this.setState({
-            country: {
-                name: "",
-                id: ""
-            }
-        })
+            this.setState({
+                country: {
+                    name: ""  
+                }
+            })
+        }    
     };
 
     handleInput = (e) => {
         e.preventDefault();
         this.setState({
-            [e.target.name]: e.target.value,
+            [e.target.name]:{
+                name : e.target.value
+            } 
         });
     };
 

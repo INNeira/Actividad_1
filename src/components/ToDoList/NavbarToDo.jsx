@@ -14,6 +14,7 @@ export const NavbarToDo = () => {
             <Link to="countries">Pais</Link>
             <Link to="cities">Ciudad</Link>
             <Link to="org">Empresa</Link>
+            <Link to='jobs'>Posiciones</Link>
           </div>
         </nav>
       </header>

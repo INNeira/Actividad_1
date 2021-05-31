@@ -6,8 +6,10 @@ import { ToDoList } from './components/ToDoList/ToDoList'
 import { CountriesView } from './views/CountriesView'
 import { CitiesView } from './views/CityView'
 import { OrgView } from './views/OrgView'
+import { JobView } from './views/JobView'
 import { NavbarToDo } from './components/ToDoList/NavbarToDo'
 import { NotFoundView } from './views/NotFoundView'
+
 
 
 const App = () => {
@@ -20,6 +22,7 @@ const App = () => {
             <Route path="/countries" exact component={CountriesView} />
             <Route path="/cities" exact component={CitiesView}/>
             <Route path="/org" exact component={OrgView}/>
+            <Route path="/jobs" exact component={JobView}/>
             <Route component={NotFoundView} />
           </Switch>
       </div>
