@@ -1,6 +1,9 @@
 import React from 'react';
 import { List } from './List'
-
+import { getData } from '../../clients/jobClient'
+import { getDataCountries } from '../../clients/countriesClient'
+import { getDataCities } from '../../clients/citiesClient'
+import { getDataOrgs } from '../../clients/orgsClient'
 
 export class ToDoList extends React.Component{
     constructor(props){
@@ -8,34 +11,57 @@ export class ToDoList extends React.Component{
         this.props = props;
         this.state ={
             tasks: [],
+            withError: false,
             inputValue: "",
             org: "",
             city: "",
             country: "",
-            countries: [],
             idCountry: "",
-            cities: [],
-            orgs: [],
+            countriesFromAPI: [],
+            jobsFromAPI: [],
+            citiesFromAPI: [],
+            orgsFromAPI: []
         }
         this.deleteItem = this.deleteItem.bind(this)
     }
 
+    getJobsFromAPI = (datos) => {
+        this.setState({
+            jobsFromAPI: datos
+        })
+    }
+
+    getCountriesFromAPI = (datos) => {
+        this.setState({
+            countriesFromAPI: datos
+        })
+    }
+
+    getCitiesFromAPI = (datos) => {
+        this.setState({
+            citiesFromAPI: datos
+        })
+    }
+
+    getOrgsFromAPI = (datos) => {
+        this.setState({
+            orgsFromAPI: datos
+        })
+    }
+
+
     componentDidMount(){
-        if(localStorage.getItem("countries") != null){
-            this.setState({
-                countries: JSON.parse(localStorage.getItem("countries")),
-            })
-        }
-        if(localStorage.getItem("cities") != null){
-            this.setState({
-                cities: JSON.parse(localStorage.getItem("cities"))
-            })
-        }
-        if(localStorage.getItem("orgs") != null){
-            this.setState({
-                orgs: JSON.parse(localStorage.getItem("orgs"))
-            })
-        }
+
+        //postData('Dev','Desarrollador',10)
+
+        getData(this.getJobsFromAPI)
+
+        getDataCountries(this.getCountriesFromAPI)
+
+        getDataCities(this.getCitiesFromAPI)
+
+        getDataOrgs(this.getOrgsFromAPI)
+
     }
     
     handleInput(eventA){
@@ -72,16 +98,16 @@ export class ToDoList extends React.Component{
             return true;
         }
 
-        if(this.state.inputValue.trim() === '' || isObjEmpty(this.state.org) || isObjEmpty(this.state.city) || isObjEmpty(this.state.country)){
+        if(isObjEmpty(this.state.inputValue) || isObjEmpty(this.state.org) || isObjEmpty(this.state.city) || isObjEmpty(this.state.country)){
             alert('Estas mandando los campos vacios')
         }else{
 
             const newItem = {
                 id: 1+Math.random(),
-                job: this.state.inputValue,
-                country:  this.state.country.country,
-                city: this.state.city.city,
-                org: this.state.org.org, 
+                job: this.state.inputValue.description,
+                country:  this.state.country.name,
+                city: this.state.city.name,
+                org: this.state.org.name, 
             }
     
             const tasks = [...this.state.tasks];
@@ -120,18 +146,17 @@ export class ToDoList extends React.Component{
         return(
             <>
                 <div className="form-todo">
-                    <label> Puesto </label>
-                    <input value={this.state.inputValue} onChange={(eventA) => this.handleInput(eventA)} type="text" />
+                    {this.state.withError && <p>Hubo un error al conectarse con la API Rest</p>}
                     <label> Pais </label>
                     <select className="form-select" id="inputGroupSelect01"
                             onChange={(e) => this.handleSelect(e)}
-                            value={JSON.stringify(this.state.cities.parentCountry)}
+                            value={JSON.stringify(this.state.country)}
                             name="country"
                     >
                         <option value={JSON.stringify({})}>Select option</option>
                         {
-                        this.state.countries.map((country) => (
-                            <option key={country.id} value={JSON.stringify(country)}>{country.country}</option>
+                        this.state.countriesFromAPI.map((country) => (
+                            <option key={country.id} value={JSON.stringify(country)}>{country.name}</option>
                         ))}
                     </select>
                     <label> Ciudad </label>
@@ -141,7 +166,7 @@ export class ToDoList extends React.Component{
                             name="city"
                     >
                         <option value={JSON.stringify({})}>Select option</option>
-                        {this.state.cities.map((city) => city.parentCountry.id === this.state.country.id ? <option key={city.id} value={JSON.stringify(city)}>{city.city}</option> : JSON.stringify({}))}
+                        {this.state.citiesFromAPI.map((city) => city.countrie.id === this.state.country.id ? <option key={city.id} value={JSON.stringify(city)}>{city.name}</option> : JSON.stringify({}))}
                     </select>
                     <label> Empresa </label>
                     <select className="form-select" id="inputGroupSelect03"
@@ -150,7 +175,16 @@ export class ToDoList extends React.Component{
                             name="org"
                     >
                         <option value={JSON.stringify({})}>Select option</option>
-                        {this.state.orgs.map((org) => org.parentCity.parentCountry.id === this.state.country.id && org.parentCity.id === this.state.city.id ? <option key={org.id} value={JSON.stringify(org)}>{org.org}</option> : JSON.stringify({}))}
+                        {this.state.orgsFromAPI.map((org) => org.place.countrieId == this.state.country.id && org.placeId == this.state.city.id ? <option key={org.id} value={JSON.stringify(org)}>{org.name}</option> : JSON.stringify({}))}
+                    </select>
+                    <label> Puesto </label>
+                    <select className="form-select" id="inputGroupSelect01"
+                            onChange={(e) => this.handleSelect(e)}
+                            value={JSON.stringify(this.state.inputValue)}
+                            name="inputValue"
+                    >
+                        <option value={JSON.stringify({})}>Select option</option>
+                        {this.state.jobsFromAPI.map((job) => (job.organizationId == this.state.org.id && job.organization.placeId == this.state.city.id ? <option key={job.id} value={JSON.stringify(job)}>{job.description}</option> : JSON.stringify({})))}
                     </select>
                     <button onClick={() => this.addTask(this.state.inputValue,this.state.org,this.state.city,this.state.country)}>Agregar <i className="fas fa-plus-square"></i>
                     </button>

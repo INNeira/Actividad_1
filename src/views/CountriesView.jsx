@@ -1,5 +1,6 @@
 import React from 'react'
 import { CountryFrom } from '../components/ToDoList/CountryForm';
+import {getDataCountries,postDataCountries, deleteDataCountries} from '../clients/countriesClient'
 
 export class CountriesView extends React.Component{
 
@@ -7,35 +8,58 @@ export class CountriesView extends React.Component{
         super(props)
         this.props = props;
         this.state = {
-            countries: []
+            countries: [],
+            countriesFromApi: []
         }
     }
 
-    componentDidMount(){
-        if(localStorage.getItem("countries") != null){
-            this.setState({
-                countries: JSON.parse(localStorage.getItem("countries"))
-            })
-        }
-    }
-
-    addCountry = (country) => {
+    updateCountriesFromAPI = (datos) => {
         this.setState({
-            countries: [...this.state.countries, country]
+            countriesFromApi: datos
         })
     }
 
-    saveData = () => {
-        window.localStorage.setItem("countries", JSON.stringify(this.state.countries))
+    componentDidMount(){
+
+        getDataCountries(this.updateCountriesFromAPI)
+
     }
+
+    addCountry = (country) => {
+        postDataCountries(country)
+    }
+
+    deleteCountry = (id) =>{
+
+        deleteDataCountries(id);
+    }
+
 
     render(){
         return(
             <>
                 <div>
                     <CountryFrom addCountry={this.addCountry} />
-                    <button onClick={this.saveData} className="save">Guardar en LS <i className="fas fa-plus-square"></i>
-                    </button>
+                    <div className="list-countries">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.countriesFromApi.map(country =>
+                                    <tr className="list" key={country.id}>
+                                        <td>{country.name}</td>
+                                        <td><button onClick={() => this.deleteCountry(country.id)} className="trash-btn" >
+                                        <i className="fas fa-trash"></i>
+                                        </button>
+                                        </td>
+                                    </tr>    
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </>
         )

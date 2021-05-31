@@ -1,5 +1,7 @@
 import React from 'react'
 import { CityForm } from '../components/ToDoList/CityForm';
+import { getDataCountries } from '../clients/countriesClient'
+import {deleteDataCities, getDataCities, postDataCities } from '../clients/citiesClient'
 
 export class CitiesView extends React.Component{
 
@@ -7,35 +9,68 @@ export class CitiesView extends React.Component{
         super(props)
         this.props = props;
         this.state = {
-            cities: []
+            cities: [],
+            countriesFromApi: [],
+            citiesFromAPI: [],
         }
     }
 
-    componentDidMount(){
-        if(localStorage.getItem("cities") != null){
-            this.setState({
-                countries: JSON.parse(localStorage.getItem("cities"))
-            })
-        }
-    }
-
-    addCity = (city) => {
+    updateCountriesFromAPI = (datos) => {
         this.setState({
-            cities: [...this.state.cities, city]
+            countriesFromApi: datos
         })
     }
 
-    saveData = () => {
-        window.localStorage.setItem("cities", JSON.stringify(this.state.cities))
+    updateCitiesFromAPI = (datos) => {
+        this.setState({
+            citiesFromAPI: datos
+        })
     }
+
+    componentDidMount(){
+
+        getDataCountries(this.updateCountriesFromAPI)
+        getDataCities(this.updateCitiesFromAPI)
+
+    }
+
+    addCity = (city , countrieId) => {
+        postDataCities(city, countrieId)
+    }
+
+    deleteCity = (id) =>{
+
+        deleteDataCities(id);
+    }
+
 
     render(){
         return(
             <>
                 <div>
-                    <CityForm addCity={this.addCity} countries={this.state.countries} />
-                    <button onClick={this.saveData} className="save">Guardar en LS <i className="fas fa-plus-square"></i>
-                    </button>
+                    <CityForm addCity={this.addCity} countriesFromApi={this.state.countriesFromApi} />
+                    <div className="list-countries">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Pais</th>
+                                    <th>Ciudad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.citiesFromAPI.map(city =>
+                                    <tr className="list" key={city.id}>
+                                        <td>{city.countrie.name}</td>
+                                        <td>{city.name}</td>
+                                        <td><button onClick={() => this.deleteCity(city.id)} className="trash-btn" >
+                                        <i className="fas fa-trash"></i>
+                                        </button>
+                                        </td>
+                                    </tr>    
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </>
         )
