@@ -110,7 +110,7 @@ export class ToDoList extends React.Component{
 
             const newItem = {
                 id: 1+Math.random(),
-                job: this.state.inputValue.description,
+                job: this.state.inputValue.position,
                 country:  this.state.country.name,
                 city: this.state.city.name,
                 org: this.state.org.name, 
@@ -206,7 +206,7 @@ export class ToDoList extends React.Component{
                             name="inputValue"
                     >
                         <option value={JSON.stringify({})}>Select option</option>
-                        {this.state.jobsFromAPI.map((job) => (job.organizationId == this.state.org.id && job.organization.placeId == this.state.city.id ? <option key={job.id} value={JSON.stringify(job)}>{job.description}</option> : JSON.stringify({})))}
+                        {this.state.jobsFromAPI.map((job) => (job.organizationId == this.state.org.id && job.organization.placeId == this.state.city.id ? <option key={job.id} value={JSON.stringify(job)}>{job.position}</option> : JSON.stringify({})))}
                     </select>
                     <button onClick={() => this.addTask(this.state.inputValue,this.state.org,this.state.city,this.state.country)}>Agregar <i className="fas fa-plus-square"></i>
                     </button>
